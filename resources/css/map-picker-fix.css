@@ -1,0 +1,32 @@
+/* Fix z-index for Filament Map Picker to not overlap with navbar */
+.leaflet-container {
+    z-index: 1 !important;
+}
+
+.leaflet-pane {
+    z-index: 1 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+    z-index: 2 !important;
+}
+
+/* Ensure map controls are clickable but don't overlap navbar */
+.leaflet-control-container {
+    z-index: 2 !important;
+}
+
+/* Filament navbar has z-index: 10, so our map should stay below */
+.leaflet-popup-pane {
+    z-index: 3 !important;
+}
+
+.leaflet-tooltip-pane {
+    z-index: 3 !important;
+}
+
+/* Fullscreen control when active should be below navbar */
+.leaflet-container.leaflet-fullscreen-on {
+    z-index: 1 !important;
+}
