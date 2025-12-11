@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -84,6 +85,8 @@ Route::post('/umkm-owner/logout', function (Request $request) {
     $request->session()->regenerateToken();
     return redirect('/');
 })->name('filament.umkm-owner.auth.logout');
+
+Route::resource('mentoring', MentoringController::class);
 
 /*
 |--------------------------------------------------------------------------
