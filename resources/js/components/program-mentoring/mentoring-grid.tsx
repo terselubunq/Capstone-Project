@@ -1,12 +1,15 @@
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
     CardDescription,
+    CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
 import type { Mentoring } from '@/types/mentoring';
+import { Link } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import {
@@ -15,6 +18,7 @@ import {
     Building2,
     Calendar,
     Clock,
+    Eye,
     Package,
     User,
 } from 'lucide-react';
@@ -175,6 +179,14 @@ export function MentoringGrid({ mentorings }: MentoringGridProps) {
                                 </div>
                             )}
                         </CardContent>
+                        <CardFooter>
+                            <Button asChild className="w-full" variant="outline">
+                                <Link href={`/program-mentoring/${mentoring.id}`}>
+                                    <Eye className="mr-2 h-4 w-4" />
+                                    Lihat Detail
+                                </Link>
+                            </Button>
+                        </CardFooter>
                     </Card>
                 );
             })}

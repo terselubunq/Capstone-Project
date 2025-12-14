@@ -77,4 +77,13 @@ class MentoringController extends Controller
             ],
         ]);
     }
+
+    public function show(int $id): Response
+    {
+        $program = ProgramMentoring::findOrFail($id);
+
+        return Inertia::render('program-mentoring/show', [
+            'program' => $program,
+        ]);
+    }
 }

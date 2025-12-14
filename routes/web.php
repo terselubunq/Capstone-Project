@@ -88,6 +88,9 @@ Route::post('/umkm-owner/logout', function (Request $request) {
 
 Route::resource('mentoring', MentoringController::class);
 
+Route::get('/program-mentoring/{id}', [MentoringController::class, 'show'])
+    ->name('program-mentoring.show');
+
 /*
 |--------------------------------------------------------------------------
 | Other Route Files
