@@ -15,6 +15,10 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 */
 
+Route::get('/login', function () {
+    return Inertia::render('auth/login-selector');
+})->name('login');
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Public-facing Routes
@@ -37,6 +41,7 @@ Route::get('/tentang', function () {
 // Redirect legacy/UX paths to UMKM owner registration
 Route::redirect('/daftar', '/umkm-owner/register');
 Route::redirect('/daftar-umkm', '/umkm-owner/register');
+
 
 /*
 |--------------------------------------------------------------------------

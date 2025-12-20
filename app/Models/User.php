@@ -51,6 +51,9 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    /**
+     * Get the roles that belong to the user.
+     */
     public function roles(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Role::class)->withTimestamps();
