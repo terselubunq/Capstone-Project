@@ -1,62 +1,60 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Umkm } from '@/types/umkm';
-import { MapPin } from 'lucide-react';
 
 interface UmkmDetailInfoProps {
     umkm: Umkm;
 }
 
 export function UmkmDetailInfo({ umkm }: UmkmDetailInfoProps) {
+    const latitude = Number(umkm.latitude);
+    const longitude = Number(umkm.longitude);
+    const hasValidCoords =
+        typeof latitude === 'number' &&
+        typeof longitude === 'number' &&
+        !isNaN(latitude) &&
+        !isNaN(longitude);
+
     return (
         <div className="space-y-6">
             {umkm.description && (
                 <Card>
                     <CardHeader>
-                        <CardTitle>Tentang Usaha</CardTitle>
+                        <CardTitle>Deskripsi</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="leading-relaxed text-muted-foreground">
-                            {umkm.description}
-                        </p>
+                        {umkm.description}
                     </CardContent>
                 </Card>
             )}
 
-            {umkm.latitude && umkm.longitude && (
+            {hasValidCoords && (
                 <Card>
                     <CardHeader>
                         <CardTitle>Lokasi</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-3">
-                        <div className="flex items-start gap-3">
-                            <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-                            <div className="text-sm">
-                                <p className="font-medium">{umkm.address}</p>
-                                <p className="text-muted-foreground">
-                                    {umkm.village}, {umkm.district}
-                                </p>
-                                <p className="text-muted-foreground">
-                                    {umkm.city}, {umkm.province}{' '}
-                                    {umkm.postal_code}
-                                </p>
-                            </div>
+                    <CardContent>
+                        <div className="mb-2 text-sm text-muted-foreground">
+                            {umkm.address}, {umkm.village}, {umkm.district}, {umkm.city}, {umkm.province}, {umkm.postal_code}
                         </div>
-
-                        <div className="aspect-video overflow-hidden rounded-lg border bg-muted">
-                            <iframe
-                                src={`https://www.openstreetmap.org/export/embed.html?bbox=${umkm.longitude - 0.01}%2C${umkm.latitude - 0.01}%2C${umkm.longitude + 0.01}%2C${umkm.latitude + 0.01}&marker=${umkm.latitude}%2C${umkm.longitude}`}
-                                className="h-full w-full"
-                                title={`Lokasi ${umkm.business_name}`}
-                            />
+                        <iframe
+                            title="Lokasi UMKM"
+                            width="100%"
+                            height="250"
+                            style={{ border: 0, borderRadius: '0.5rem' }}
+                            loading="lazy"
+                            allowFullScreen
+                            src={`https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.01},${latitude - 0.01},${longitude + 0.01},${latitude + 0.01}&layer=mapnik&marker=${latitude},${longitude}`}
+                        />
+                        <div className="mt-2">
+                            <a
+                                href={`https://maps.google.com/?q=${latitude},${longitude}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary underline"
+                            >
+                                Lihat di Google Maps
+                            </a>
                         </div>
-                        <a
-                            href={`https://www.google.com/maps/search/?api=1&query=${umkm.latitude},${umkm.longitude}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block text-center text-sm text-primary hover:underline"
-                        >
-                            Buka di Google Maps →
-                        </a>
                     </CardContent>
                 </Card>
             )}
