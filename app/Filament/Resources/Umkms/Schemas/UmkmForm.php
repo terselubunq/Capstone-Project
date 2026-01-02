@@ -183,11 +183,11 @@ class UmkmForm
                     ->schema([
                         TextInput::make('nib')
                             ->label('NIB (Nomor Induk Berusaha)')
-                            ->length(13)
                             ->numeric()
+                            ->length(13)
                             ->placeholder('1234567890123')
                             ->helperText('Jika sudah memiliki NIB dari OSS (13 digit)')
-                            ->rule('nullable|digits:13'),
+                            ->rules(['nullable', 'digits:13']),
 
                         Toggle::make('has_pirt')
                             ->label('Memiliki PIRT')
@@ -209,40 +209,37 @@ class UmkmForm
                     ->description('Keberadaan usaha di media sosial dan website')
                     ->schema([
                         TextInput::make('website')
-                            ->label('Website')
+                            ->label('Marketplace Link')
                             ->url()
-                            ->placeholder('https://www.contoh.com')
-                            ->helperText('Website resmi usaha (jika ada)')
-                            ->prefix('https://'),
+                            ->placeholder('https://shopee.co.id/toko-anda atau https://tokopedia.com/toko-anda')
+                            ->helperText('Link marketplace / website usaha (jika ada)'),
 
                         TextInput::make('whatsapp')
                             ->label('WhatsApp Business')
                             ->tel()
-                            ->numeric()
                             ->placeholder('6281234567890')
                             ->helperText('Format: 628xxx (tanpa tanda +)')
-                            ->prefix('628')
-                            ->rule('nullable|regex:/^628[0-9]{8,12}$/'),
+                            ->rules(['nullable', 'regex:/^628[0-9]{8,12}$/']),
 
                         TextInput::make('instagram')
                             ->label('Instagram')
                             ->placeholder('batiktrusmi')
                             ->helperText('Username Instagram (tanpa @)')
                             ->prefix('@')
-                            ->rule('nullable|regex:/^[a-zA-Z0-9._]+$/'),
+                            ->rules(['nullable', 'regex:/^[a-zA-Z0-9._]+$/']),
 
                         TextInput::make('facebook')
                             ->label('Facebook')
                             ->placeholder('BatikTrusmiOfficial')
                             ->helperText('Username atau nama halaman Facebook')
-                            ->rule('nullable|regex:/^[a-zA-Z0-9.]+$/'),
+                            ->rules(['nullable', 'regex:/^[a-zA-Z0-9.]+$/']),
 
                         TextInput::make('tiktok')
                             ->label('TikTok')
                             ->placeholder('batiktrusmi')
                             ->helperText('Username TikTok (tanpa @)')
                             ->prefix('@')
-                            ->rule('nullable|regex:/^[a-zA-Z0-9._]+$/'),
+                            ->rules(['nullable', 'regex:/^[a-zA-Z0-9._]+$/']),
                     ])
                     ->columns(2),
 
@@ -283,10 +280,78 @@ class UmkmForm
                         TextInput::make('address_search')
                             ->label('Cari Alamat')
                             ->placeholder('Contoh: Jl. Sunan Gunung Jati, Cirebon')
-                            ->helperText('Ketik alamat, kemudian klik di luar kotak atau tab untuk mencari lokasi di peta')
-                            ->live(onBlur: true)
+                            ->helperText('Mulai ketik untuk rekomendasi (OpenStreetMap), lalu pilih. Klik di luar kotak untuk set lokasi otomatis.')
+                            ->live()
                             ->extraInputAttributes([
+                                'id' => 'umkm-address-search',
+                                'list' => 'umkm-address-suggestions',
+                                'autocomplete' => 'off',
                                 'onkeydown' => 'if(event.key === "Enter") { event.preventDefault(); this.blur(); }',
+                                'x-data' => '{}',
+                                'x-init' => <<<'JS'
+(() => {
+  const input = $el;
+  const listId = input.getAttribute('list');
+  if (!listId) return;
+
+  let list = document.getElementById(listId);
+  if (!list) {
+    list = document.createElement('datalist');
+    list.id = listId;
+    input.parentElement?.appendChild(list);
+  }
+
+  let lastController = null;
+  let lastQuery = '';
+  let debounce = null;
+
+  const clearOptions = () => {
+    while (list.firstChild) list.removeChild(list.firstChild);
+  };
+
+  const setOptions = (items) => {
+    clearOptions();
+    for (const item of items) {
+      const opt = document.createElement('option');
+      opt.value = item.display_name;
+      opt.dataset.lat = item.lat;
+      opt.dataset.lon = item.lon;
+      list.appendChild(opt);
+    }
+  };
+
+  const fetchSuggestions = async (q) => {
+    if (!q || q.length < 3) {
+      clearOptions();
+      return;
+    }
+
+    if (q === lastQuery) return;
+    lastQuery = q;
+
+    if (lastController) lastController.abort();
+    lastController = new AbortController();
+
+    const url = `/_internal/geocode/nominatim?q=${encodeURIComponent(q)}`;
+    const res = await fetch(url, { signal: lastController.signal });
+    if (!res.ok) {
+      clearOptions();
+      return;
+    }
+
+    const data = await res.json();
+    setOptions(Array.isArray(data) ? data : []);
+  };
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    window.clearTimeout(debounce);
+    debounce = window.setTimeout(() => {
+      fetchSuggestions(q).catch(() => {});
+    }, 250);
+  });
+})();
+JS,
                             ])
                             ->afterStateUpdated(function ($state, callable $set, $livewire) {
                                 if (empty($state)) {

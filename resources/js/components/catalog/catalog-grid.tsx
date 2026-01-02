@@ -10,6 +10,15 @@ interface CatalogGridProps {
     umkms: Umkm[];
 }
 
+function pickFirstPhoto(photos: unknown): string | null {
+    if (Array.isArray(photos) && photos.length > 0) {
+        const first = photos[0];
+        return typeof first === 'string' && first.trim() !== '' ? first : null;
+    }
+
+    return null;
+}
+
 export function CatalogGrid({ umkms }: CatalogGridProps) {
     if (umkms.length === 0) {
         return (
@@ -34,9 +43,11 @@ export function CatalogGrid({ umkms }: CatalogGridProps) {
     return (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {umkms.map((umkm) => {
-                const imageSrc = resolveImageUrl(
-                    umkm.logo || umkm.photos || null,
-                );
+                const firstPhoto = pickFirstPhoto(umkm.photos);
+                const rawImage =
+                    umkm.first_image ?? umkm.logo ?? firstPhoto ?? null;
+
+                const imageSrc = resolveImageUrl(rawImage);
 
                 return (
                     <Card

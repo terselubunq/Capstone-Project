@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MentoringController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -101,3 +102,35 @@ Route::get('/program-mentoring/{id}', [MentoringController::class, 'show'])
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
+
+Route::middleware(['web', 'auth'])->get('/_internal/geocode/nominatim', function () {
+    $query = request()->string('q')->trim()->value();
+
+    if ($query === '' || mb_strlen($query) < 3) {
+        return response()->json([]);
+    }
+
+    $response = Http::withHeaders([
+        'User-Agent' => 'SI-UMKM-Cirebon/1.0',
+        'Accept-Language' => 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+    ])->timeout(10)->get('https://nominatim.openstreetmap.org/search', [
+        'q' => $query.' Cirebon, Indonesia',
+        'format' => 'json',
+        'limit' => 6,
+        'countrycodes' => 'id',
+        'addressdetails' => 1,
+    ]);
+
+    if (! $response->successful()) {
+        return response()->json([]);
+    }
+
+    return collect($response->json())
+        ->map(fn (array $item) => [
+            'display_name' => $item['display_name'] ?? null,
+            'lat' => $item['lat'] ?? null,
+            'lon' => $item['lon'] ?? null,
+        ])
+        ->filter(fn (array $item) => filled($item['display_name']) && filled($item['lat']) && filled($item['lon']))
+        ->values();
+})->name('internal.nominatim.suggest');
