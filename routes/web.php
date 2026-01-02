@@ -9,15 +9,12 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
 |--------------------------------------------------------------------------
 */
-
-Route::get('/login', function () {
-    return Inertia::render('auth/login-selector');
-})->name('login');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 

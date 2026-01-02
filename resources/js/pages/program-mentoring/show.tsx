@@ -1,122 +1,306 @@
-import AuthenticatedLayout from '@/layouts/authenticated-layout';
-import type { PageProps } from '@/types';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Footer } from '@/components/footer';
+import { Navigation } from '@/components/navigation';
+import type { Mentoring } from '@/types/mentoring';
 import { Head, Link } from '@inertiajs/react';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+import {
+    ArrowLeft,
+    Award,
+    BookOpen,
+    Building2,
+    Calendar,
+    Clock,
+    MapPin,
+    Target,
+    User,
+} from 'lucide-react';
 
-interface ProgramMentoring {
-    id: number;
-    title: string;
-    description: string;
-    mentor_name: string;
-    duration: string;
-    start_date: string;
-    end_date: string;
-    max_participants: number;
-    current_participants: number;
-    status: string;
-    created_at: string;
+interface ShowProps {
+    mentoring: Mentoring;
 }
 
-interface ShowProps extends PageProps {
-    program: ProgramMentoring;
-}
+export default function Show({ mentoring }: ShowProps) {
+    const getStatusBadge = (status: Mentoring['status']) => {
+        const badges = {
+            scheduled: { label: 'Terjadwal', variant: 'secondary' as const },
+            ongoing: { label: 'Berlangsung', variant: 'default' as const },
+            completed: { label: 'Selesai', variant: 'outline' as const },
+            cancelled: { label: 'Dibatalkan', variant: 'destructive' as const },
+        };
+        return badges[status];
+    };
 
-export default function Show({ program }: ShowProps) {
+    const getTypeBadge = (type: Mentoring['type']) => {
+        const types: Record<string, string> = {
+            financial: 'Keuangan',
+            marketing: 'Pemasaran',
+            production: 'Produksi',
+            management: 'Manajemen',
+            technology: 'Teknologi',
+            legal: 'Legal & Perizinan',
+            other: 'Lainnya',
+        };
+        return types[type] || type;
+    };
+
+    const statusBadge = getStatusBadge(mentoring.status);
+
     return (
-        <AuthenticatedLayout>
-            <Head title={program.title} />
+        <div className="flex min-h-screen flex-col">
+            <Head title={mentoring.program_name} />
+            <Navigation />
 
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                        <div className="p-6">
-                            <div className="mb-6 flex items-center justify-between">
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                                    {program.title}
-                                </h1>
-                                <Link
-                                    href="/program-mentoring"
-                                    className="rounded-md bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
-                                >
-                                    Back to List
-                                </Link>
+            <main className="flex-1 bg-gradient-to-b from-emerald-50/50 to-white py-12 dark:from-gray-900 dark:to-gray-950">
+                <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+                    {/* Back Button */}
+                    <div className="mb-6">
+                        <Button variant="ghost" asChild>
+                            <Link href="/program-mentoring">
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Kembali ke Daftar Program
+                            </Link>
+                        </Button>
+                    </div>
+
+                    {/* Header Section */}
+                    <Card className="mb-6">
+                        <CardHeader>
+                            <div className="flex flex-wrap items-center gap-3 mb-4">
+                                <Badge variant={statusBadge.variant} className="text-sm">
+                                    {statusBadge.label}
+                                </Badge>
+                                <Badge variant="outline">
+                                    {getTypeBadge(mentoring.type)}
+                                </Badge>
                             </div>
+                            <CardTitle className="text-2xl md:text-3xl">
+                                {mentoring.program_name}
+                            </CardTitle>
+                            <p className="mt-3 text-muted-foreground">
+                                {mentoring.description}
+                            </p>
+                        </CardHeader>
+                    </Card>
 
-                            <div className="space-y-6">
-                                <div>
-                                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                                        Description
-                                    </h2>
-                                    <p className="mt-2 text-gray-700 dark:text-gray-300">
-                                        {program.description}
-                                    </p>
-                                </div>
+                    <div className="grid gap-6 md:grid-cols-3">
+                        {/* Main Content */}
+                        <div className="md:col-span-2 space-y-6">
+                            {/* UMKM Info */}
+                            {mentoring.umkm && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center gap-2 text-lg">
+                                            <Building2 className="h-5 w-5 text-emerald-600" />
+                                            UMKM Peserta
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="flex items-start gap-4">
+                                            {mentoring.umkm.logo && (
+                                                <img
+                                                    src={mentoring.umkm.logo}
+                                                    alt={mentoring.umkm.business_name}
+                                                    className="h-16 w-16 rounded-lg object-cover"
+                                                />
+                                            )}
+                                            <div>
+                                                <h3 className="font-semibold text-lg">
+                                                    {mentoring.umkm.business_name}
+                                                </h3>
+                                                {mentoring.umkm.category && (
+                                                    <Badge variant="secondary" className="mt-1">
+                                                        {mentoring.umkm.category.name}
+                                                    </Badge>
+                                                )}
+                                                {mentoring.umkm.owner && (
+                                                    <p className="mt-2 text-sm text-muted-foreground flex items-center gap-1">
+                                                        <User className="h-4 w-4" />
+                                                        Pemilik: {mentoring.umkm.owner.name}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                <div className="grid gap-6 md:grid-cols-2">
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                                            Mentor
-                                        </h3>
-                                        <p className="text-gray-700 dark:text-gray-300">
-                                            {program.mentor_name}
-                                        </p>
-                                    </div>
+                            {/* Objectives */}
+                            {mentoring.objectives && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center gap-2 text-lg">
+                                            <Target className="h-5 w-5 text-emerald-600" />
+                                            Tujuan Program
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                                            {mentoring.objectives.split('\n').map((obj, idx) => (
+                                                <p key={idx} className="flex items-start gap-2 mb-2">
+                                                    <Award className="h-4 w-4 mt-1 text-emerald-600 shrink-0" />
+                                                    <span>{obj}</span>
+                                                </p>
+                                            ))}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                                            Duration
-                                        </h3>
-                                        <p className="text-gray-700 dark:text-gray-300">
-                                            {program.duration}
-                                        </p>
-                                    </div>
+                            {/* Sessions */}
+                            {mentoring.sessions && mentoring.sessions.length > 0 && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="flex items-center gap-2 text-lg">
+                                            <BookOpen className="h-5 w-5 text-emerald-600" />
+                                            Sesi Mentoring ({mentoring.sessions.length})
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="space-y-4">
+                                            {mentoring.sessions.map((session, idx) => (
+                                                <div
+                                                    key={session.id}
+                                                    className="flex items-start gap-4 p-4 rounded-lg bg-muted/50"
+                                                >
+                                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 font-semibold text-sm dark:bg-emerald-900">
+                                                        {idx + 1}
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <h4 className="font-medium">
+                                                            {session.topic || `Sesi ${idx + 1}`}
+                                                        </h4>
+                                                        <div className="mt-1 flex flex-wrap gap-4 text-sm text-muted-foreground">
+                                                            <span className="flex items-center gap-1">
+                                                                <Calendar className="h-4 w-4" />
+                                                                {format(
+                                                                    new Date(session.scheduled_at),
+                                                                    'dd MMM yyyy, HH:mm',
+                                                                    { locale: id }
+                                                                )}
+                                                            </span>
+                                                            {session.location && (
+                                                                <span className="flex items-center gap-1">
+                                                                    <MapPin className="h-4 w-4" />
+                                                                    {session.location}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <Badge
+                                                        variant={
+                                                            session.status === 'completed'
+                                                                ? 'default'
+                                                                : session.status === 'cancelled'
+                                                                    ? 'destructive'
+                                                                    : 'secondary'
+                                                        }
+                                                    >
+                                                        {session.status === 'completed'
+                                                            ? 'Selesai'
+                                                            : session.status === 'cancelled'
+                                                                ? 'Dibatalkan'
+                                                                : 'Terjadwal'}
+                                                    </Badge>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
 
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                                            Start Date
-                                        </h3>
-                                        <p className="text-gray-700 dark:text-gray-300">
-                                            {new Date(program.start_date).toLocaleDateString()}
-                                        </p>
-                                    </div>
+                        {/* Sidebar */}
+                        <div className="space-y-6">
+                            {/* Mentor Info */}
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-lg">
+                                        <User className="h-5 w-5 text-emerald-600" />
+                                        Mentor
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    {mentoring.mentor ? (
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 font-bold dark:bg-emerald-900">
+                                                {mentoring.mentor.name?.charAt(0).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <p className="font-medium">{mentoring.mentor.name}</p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {mentoring.mentor.email}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <p className="text-muted-foreground">Belum ditentukan</p>
+                                    )}
+                                </CardContent>
+                            </Card>
 
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                                            End Date
-                                        </h3>
-                                        <p className="text-gray-700 dark:text-gray-300">
-                                            {new Date(program.end_date).toLocaleDateString()}
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                                            Participants
-                                        </h3>
-                                        <p className="text-gray-700 dark:text-gray-300">
-                                            {program.current_participants} / {program.max_participants}
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                                            Status
-                                        </h3>
-                                        <span
-                                            className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${
-                                                program.status === 'active'
-                                                    ? 'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-100'
-                                                    : 'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-100'
-                                            }`}
-                                        >
-                                            {program.status}
+                            {/* Program Duration */}
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-lg">
+                                        <Clock className="h-5 w-5 text-emerald-600" />
+                                        Durasi Program
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-3">
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-muted-foreground">Mulai</span>
+                                        <span className="font-medium">
+                                            {format(new Date(mentoring.start_date), 'dd MMM yyyy', {
+                                                locale: id,
+                                            })}
                                         </span>
                                     </div>
-                                </div>
-                            </div>
+                                    <div className="flex items-center justify-between text-sm">
+                                        <span className="text-muted-foreground">Selesai</span>
+                                        <span className="font-medium">
+                                            {format(new Date(mentoring.end_date), 'dd MMM yyyy', {
+                                                locale: id,
+                                            })}
+                                        </span>
+                                    </div>
+                                    <div className="border-t pt-3">
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-muted-foreground">Total Durasi</span>
+                                            <span className="font-medium">
+                                                {Math.ceil(
+                                                    (new Date(mentoring.end_date).getTime() -
+                                                        new Date(mentoring.start_date).getTime()) /
+                                                    (1000 * 60 * 60 * 24 * 7)
+                                                )}{' '}
+                                                Minggu
+                                            </span>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Notes */}
+                            {mentoring.notes && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle className="text-lg">Catatan</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                                            {mentoring.notes}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            )}
                         </div>
                     </div>
                 </div>
-            </div>
-        </AuthenticatedLayout>
+            </main>
+            <Footer />
+        </div>
     );
 }

@@ -108,9 +108,9 @@ export function Navigation() {
                                 className="hidden md:inline-flex"
                                 asChild
                             >
-                                <Link href="/login" prefetch="hover">
+                                <a href="/login">
                                     Masuk
-                                </Link>
+                                </a>
                             </Button>
                             <Button size="sm" asChild className="hidden md:inline-flex">
                                 <a href="/umkm-owner/register">Daftar UMKM</a>
@@ -216,9 +216,9 @@ export function Navigation() {
                                                 asChild
                                                 onClick={() => setOpen(false)}
                                             >
-                                                <Link href="/login" prefetch="hover">
+                                                <a href="/login">
                                                     Masuk
-                                                </Link>
+                                                </a>
                                             </Button>
                                             <Button
                                                 asChild

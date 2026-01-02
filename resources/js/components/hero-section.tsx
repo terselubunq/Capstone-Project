@@ -36,7 +36,7 @@ export function HeroSection() {
                             </Link>
                         </Button>
                         <Button size="lg" variant="outline" asChild>
-                            <Link href="/daftar">Daftarkan UMKM Anda</Link>
+                            <a href="/daftar">Daftarkan UMKM Anda</a>
                         </Button>
                     </div>
 

@@ -17,8 +17,27 @@ class AuthenticatedSessionController extends Controller
     /**
      * Show the login page.
      */
-    public function create(Request $request): Response
+    public function create(Request $request): Response|\Symfony\Component\HttpFoundation\Response
     {
+        // If user is already authenticated, redirect to their dashboard with full page reload
+        if (Auth::check()) {
+            $user = Auth::user();
+            
+            if ($user->hasRole('super-admin')) {
+                return Inertia::location('/super-admin');
+            } elseif ($user->hasRole('admin')) {
+                return Inertia::location('/admin');
+            } elseif ($user->hasRole('staff')) {
+                return Inertia::location('/staff');
+            } elseif ($user->hasRole('mentor')) {
+                return Inertia::location('/mentor');
+            } elseif ($user->hasRole('umkm-owner')) {
+                return Inertia::location('/umkm-owner');
+            }
+            
+            return Inertia::location('/');
+        }
+
         return Inertia::render('auth/login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
@@ -28,37 +47,49 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
-{
-    $user = $request->validateCredentials();
+    public function store(LoginRequest $request): \Symfony\Component\HttpFoundation\Response
+    {
+        $user = $request->validateCredentials();
 
-    if (Features::enabled(Features::twoFactorAuthentication()) && $user->hasEnabledTwoFactorAuthentication()) {
-        $request->session()->put([
-            'login.id' => $user->getKey(),
-            'login.remember' => $request->boolean('remember'),
-        ]);
+        if (Features::enabled(Features::twoFactorAuthentication()) && $user->hasEnabledTwoFactorAuthentication()) {
+            $request->session()->put([
+                'login.id' => $user->getKey(),
+                'login.remember' => $request->boolean('remember'),
+            ]);
 
-        return to_route('two-factor.login');
+            return to_route('two-factor.login');
+        }
+
+        Auth::login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        // 🔥 Use Inertia::location() for full page reload to Filament panels
+        if ($user->hasRole('super-admin')) {
+            return Inertia::location('/super-admin');
+        } elseif ($user->hasRole('admin')) {
+            return Inertia::location('/admin');
+        } elseif ($user->hasRole('staff')) {
+            return Inertia::location('/staff');
+        } elseif ($user->hasRole('mentor')) {
+            return Inertia::location('/mentor');
+        } elseif ($user->hasRole('umkm-owner')) {
+            return Inertia::location('/umkm-owner');
+        }
+
+        // default fallback
+        return Inertia::location('/');
     }
 
-    Auth::login($user, $request->boolean('remember'));
-    $request->session()->regenerate();
+    /**
+     * Destroy an authenticated session (logout).
+     */
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::guard('web')->logout();
 
-    // 🔥 Logic redirect sesuai role
-    if ($user->hasRole('super-admin')) {
-        return redirect()->intended('/super-admin');
-    } elseif ($user->hasRole('admin')) {
-        return redirect()->intended('/admin');
-    } elseif ($user->hasRole('staff')) {
-        return redirect()->intended('/staff');
-    } elseif ($user->hasRole('mentor')) {
-        return redirect()->intended('/mentor');
-    } elseif ($user->hasRole('umkm-owner')) {
-        return redirect()->intended('/umkm-owner');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
-
-    // default fallback
-    return redirect()->intended('/');
-}
-
 }

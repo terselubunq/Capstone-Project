@@ -118,9 +118,9 @@ class User extends Authenticatable implements FilamentUser
             return $this->hasAnyRole(['super-admin', 'admin', 'mentor']);
         }
 
-        // UMKM Owner panel: super-admin, admin, and umkm-owner
+        // UMKM Owner panel: only umkm-owner (and super-admin for oversight)
         if ($panel->getId() === 'umkm-owner') {
-            return $this->hasAnyRole(['super-admin', 'admin', 'umkm-owner']);
+            return $this->hasAnyRole(['super-admin', 'umkm-owner']);
         }
 
         // Deny access to unknown panels

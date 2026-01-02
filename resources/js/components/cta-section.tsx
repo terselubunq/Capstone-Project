@@ -43,10 +43,10 @@ export function CtaSection() {
                                 </li>
                             </ul>
                             <Button size="lg" className="gap-2" asChild>
-                                <Link href="/daftar">
+                                <a href="/daftar">
                                     Daftar Sekarang
                                     <ArrowRight className="h-4 w-4" />
-                                </Link>
+                                </a>
                             </Button>
                         </CardContent>
                     </Card>
@@ -86,10 +86,10 @@ export function CtaSection() {
                                 className="gap-2"
                                 asChild
                             >
-                                <Link href="/mentor">
+                                <a href="/mentor">
                                     Pelajari Lebih Lanjut
                                     <ArrowRight className="h-4 w-4" />
-                                </Link>
+                                </a>
                             </Button>
                         </CardContent>
                     </Card>

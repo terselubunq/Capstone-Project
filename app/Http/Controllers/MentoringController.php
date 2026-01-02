@@ -80,10 +80,19 @@ class MentoringController extends Controller
 
     public function show(int $id): Response
     {
-        $program = ProgramMentoring::findOrFail($id);
+        $mentoring = Mentoring::with([
+            'umkm.category',
+            'umkm.owner',
+            'mentor',
+            'sessions' => function ($query) {
+                $query->orderBy('scheduled_at', 'asc');
+            }
+        ])
+        ->withCount('sessions')
+        ->findOrFail($id);
 
         return Inertia::render('program-mentoring/show', [
-            'program' => $program,
+            'mentoring' => $mentoring,
         ]);
     }
 }

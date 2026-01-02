@@ -90,34 +90,34 @@ class UmkmSeeder extends Seeder
             // Save now that required NOT NULL fields are set
             $umkm->save();
 
-            // choose keyword for images
-            $keyword = 'cirebon';
-            foreach ($keywordMap as $k => $map) {
-                if (str_contains(strtolower($umkm->business_name), $k) || ($umkm->business_type && strtolower($umkm->business_type) === $k)) {
-                    $keyword = $map;
-                    break;
-                }
+            // choose placeholder image based on category
+            $imageMap = [
+                'kuliner' => '/storage/umkms/placeholder/kuliner.png',
+                'batik' => '/storage/umkms/placeholder/batik.png',
+                'kerajinan' => '/storage/umkms/placeholder/kerajinan.png',
+                'fashion' => '/storage/umkms/placeholder/fashion.png',
+            ];
+            
+            // Determine which placeholder to use based on business name
+            $placeholderKey = 'kuliner'; // default
+            if (str_contains(strtolower($umkm->business_name), 'batik')) {
+                $placeholderKey = 'batik';
+            } elseif (str_contains(strtolower($umkm->business_name), 'rotan') ||
+                      str_contains(strtolower($umkm->business_name), 'anyaman') ||
+                      str_contains(strtolower($umkm->business_name), 'kerajinan') ||
+                      str_contains(strtolower($umkm->business_name), 'bordir')) {
+                $placeholderKey = 'kerajinan';
+            } elseif (str_contains(strtolower($umkm->business_name), 'konveksi') ||
+                      str_contains(strtolower($umkm->business_name), 'jahit') ||
+                      str_contains(strtolower($umkm->business_name), 'tas') ||
+                      str_contains(strtolower($umkm->business_name), 'rajut')) {
+                $placeholderKey = 'fashion';
             }
 
-            // try download logo and photos (if allowed); fallback to remote URL
-            $logoRemote = "https://loremflickr.com/400/400/{$keyword}";
-            $logoDest = "umkms/{$umkm->id}/logo.jpg";
-            $logoUrl = $download($logoRemote, $logoDest);
-            $umkm->logo = $logoUrl ?: $logoRemote;
-
-            // photos 1-2
-            $photos = [];
-            $count = rand(1, 2);
-            for ($i = 0; $i < $count; $i++) {
-                if ($i > 0) sleep(1);
-                $remote = "https://loremflickr.com/800/600/{$keyword}";
-                $dest = "umkms/{$umkm->id}/photo{$i}.jpg";
-                $pUrl = $download($remote, $dest);
-                $photos[] = $pUrl ?: $remote;
-            }
-
-            $umkm->photos = $photos;
-            $umkm->save(); // update images
+            // Use local placeholder image
+            $umkm->logo = $imageMap[$placeholderKey];
+            $umkm->photos = [$imageMap[$placeholderKey]];
+            $umkm->save();
         };
 
         // ---------- create active/published (20) in-memory and then persist after setting required fields ----------

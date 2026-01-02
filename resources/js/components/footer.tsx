@@ -94,22 +94,20 @@ export function Footer() {
                         <h3 className="mb-4 font-semibold">Layanan</h3>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <Link
+                                <a
                                     href="/daftar"
                                     className="text-muted-foreground hover:text-foreground transition-colors"
-                                    prefetch="hover"
                                 >
                                     Daftar UMKM
-                                </Link>
+                                </a>
                             </li>
                             <li>
-                                <Link
+                                <a
                                     href="/mentor"
                                     className="text-muted-foreground hover:text-foreground transition-colors"
-                                    prefetch="hover"
                                 >
                                     Program Mentoring
-                                </Link>
+                                </a>
                             </li>
                             <li>
                                 <Link
@@ -121,13 +119,12 @@ export function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link
-                                    href="/login"
+                                <a
+                                    href="/umkm-owner/login"
                                     className="text-muted-foreground hover:text-foreground transition-colors"
-                                    prefetch="hover"
                                 >
                                     Login
-                                </Link>
+                                </a>
                             </li>
                         </ul>
                     </div>

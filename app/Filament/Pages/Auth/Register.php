@@ -11,6 +11,16 @@ use Filament\Schemas\Schema;
 
 class Register extends BaseRegister
 {
+    public function getHeading(): string
+    {
+        return 'Daftarkan UMKM Anda!';
+    }
+
+    public function getSubheading(): ?string
+    {
+        return 'Isi formulir di bawah untuk mendaftarkan usaha Anda';
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -78,5 +88,22 @@ class Register extends BaseRegister
             ->label('Konfirmasi Password')
             ->placeholder('Ulangi password')
             ->revealable();
+    }
+
+    protected function getFormActions(): array
+    {
+        return [
+            $this->getRegisterFormAction()
+                ->label('Daftar'),
+        ];
+    }
+
+    /**
+     * Get the URL to redirect to after registration.
+     * This ensures users are redirected to the UMKM Owner panel.
+     */
+    protected function getRegisteredRedirectUrl(): string
+    {
+        return '/umkm-owner';
     }
 }

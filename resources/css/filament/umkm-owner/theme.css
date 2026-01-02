@@ -1,0 +1,31 @@
+/* Custom theme untuk panel UMKM Owner */
+
+/* Memastikan halaman auth (login/register) memiliki background solid fullscreen */
+.fi-simple-layout {
+    /* Menghapus overlay transparan */
+    background: linear-gradient(to bottom right, #f3f4f6 0%, #d1d5db 50%, #f3f4f6 100%) !important;
+    min-height: 100vh !important;
+}
+
+/* Dark mode support */
+.dark .fi-simple-layout {
+    background: linear-gradient(to bottom right, #000000 0%, #1f2937 50%, #000000 100%) !important;
+}
+
+/* Menghilangkan backdrop blur jika ada */
+.fi-simple-layout::before,
+.fi-simple-layout::after {
+    display: none !important;
+}
+
+/* Form container styling */
+.fi-simple-main {
+    background-color: #ffffff !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.dark .fi-simple-main {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+}
