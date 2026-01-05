@@ -99,7 +99,14 @@ class UmkmForm
                             ->default(Auth::id())
                             ->helperText('Pilih pemilik UMKM. Data nama, NIK, email, dan telepon diambil dari profil user.')
                             ->columnSpanFull(),
-                    ]),
+                    ])
+                    ->hidden(fn () => filament()->getCurrentPanel()?->getId() === 'umkm-owner'),
+
+                // Hidden field for UMKM Owner - automatically set owner_id to current user
+                Hidden::make('owner_id')
+                    ->default(Auth::id())
+                    ->dehydrated(true)
+                    ->visible(fn () => filament()->getCurrentPanel()?->getId() === 'umkm-owner'),
 
                 // === ADDRESS INFORMATION ===
                 Section::make('Alamat Usaha')

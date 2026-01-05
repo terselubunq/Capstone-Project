@@ -147,37 +147,24 @@ export function MentoringGrid({ mentorings }: MentoringGridProps) {
                                 <div className="flex items-center gap-2">
                                     <Clock className="h-4 w-4 text-muted-foreground" />
                                     <span>
-                                        {Math.ceil(
-                                            (new Date(
-                                                mentoring.end_date,
-                                            ).getTime() -
-                                                new Date(
-                                                    mentoring.start_date,
-                                                ).getTime()) /
-                                                (1000 * 60 * 60 * 24 * 7),
-                                        )}{' '}
-                                        Minggu
+                                        {(() => {
+                                            const diffMs = new Date(mentoring.end_date).getTime() - new Date(mentoring.start_date).getTime();
+                                            const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                                            if (diffDays < 7) {
+                                                return `${diffDays} Hari`;
+                                            } else if (diffDays < 30) {
+                                                const weeks = Math.round(diffDays / 7);
+                                                return `${weeks} Minggu`;
+                                            } else {
+                                                const months = Math.round(diffDays / 30);
+                                                return `${months} Bulan`;
+                                            }
+                                        })()}
                                     </span>
                                 </div>
                             </div>
 
-                            {/* Objectives Preview */}
-                            {mentoring.objectives && (
-                                <div className="rounded-lg bg-muted/50 p-3">
-                                    <div className="mb-1 flex items-center gap-2">
-                                        <Award className="h-4 w-4 text-muted-foreground" />
-                                        <span className="text-xs font-semibold text-muted-foreground">
-                                            Tujuan Program
-                                        </span>
-                                    </div>
-                                    <p className="line-clamp-3 text-xs text-muted-foreground">
-                                        {mentoring.objectives
-                                            .split('\n')
-                                            .slice(0, 2)
-                                            .join(' ')}
-                                    </p>
-                                </div>
-                            )}
+                            {/* Tujuan Program disembunyikan - hanya tampil di halaman detail */}
                         </CardContent>
                         <CardFooter>
                             <Button asChild className="w-full" variant="outline">

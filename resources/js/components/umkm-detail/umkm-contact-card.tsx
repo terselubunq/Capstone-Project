@@ -131,27 +131,27 @@ export function UmkmContactCard({ umkm }: UmkmContactCardProps) {
     const socialLinks = [
         umkm.facebook
             ? {
-                  key: 'facebook',
-                  label: 'Facebook',
-                  href: ensureHttpUrl(umkm.facebook),
-                  Icon: Facebook,
-              }
+                key: 'facebook',
+                label: 'Facebook',
+                href: ensureHttpUrl(umkm.facebook),
+                Icon: Facebook,
+            }
             : null,
         umkm.instagram
             ? {
-                  key: 'instagram',
-                  label: 'Instagram',
-                  href: ensureHttpUrl(umkm.instagram),
-                  Icon: Instagram,
-              }
+                key: 'instagram',
+                label: 'Instagram',
+                href: ensureHttpUrl(umkm.instagram),
+                Icon: Instagram,
+            }
             : null,
         umkm.tiktok
             ? {
-                  key: 'tiktok',
-                  label: 'TikTok',
-                  href: ensureHttpUrl(umkm.tiktok),
-                  Icon: Smartphone,
-              }
+                key: 'tiktok',
+                label: 'TikTok',
+                href: ensureHttpUrl(umkm.tiktok),
+                Icon: Smartphone,
+            }
             : null,
     ].filter(Boolean) as Array<{
         key: string;
@@ -200,123 +200,7 @@ export function UmkmContactCard({ umkm }: UmkmContactCardProps) {
                         </div>
                     </div>
 
-                    <Separator />
-
-                    <FieldRow label="ID" value={umkm.id ?? '-'} />
-                    <FieldRow
-                        label="Slug"
-                        value={umkm.slug ? <code className="text-xs">{umkm.slug}</code> : '-'}
-                    />
-                    <FieldRow label="Kategori" value={umkm.category?.name ?? '-'} />
-                    <FieldRow
-                        label="Tipe Usaha"
-                        value={
-                            umkm.business_type ? (
-                                <code className="text-xs">{String(umkm.business_type)}</code>
-                            ) : (
-                                '-'
-                            )
-                        }
-                    />
-                    <FieldRow
-                        label="Status"
-                        value={
-                            <div className="flex items-center gap-2">
-                                <Badge variant="secondary">{statusLabel}</Badge>
-                                {typeof umkm.is_published === 'boolean' && (
-                                    <Badge
-                                        variant={
-                                            umkm.is_published ? 'default' : 'outline'
-                                        }
-                                    >
-                                        {umkm.is_published ? 'Published' : 'Not Published'}
-                                    </Badge>
-                                )}
-                            </div>
-                        }
-                    />
-
-                    <Separator />
-
-                    <FieldRow
-                        label="Tahun Berdiri"
-                        value={formatYear(umkm.established_year)}
-                    />
-                    <FieldRow
-                        label="Jumlah Karyawan"
-                        value={
-                            umkm.employee_count !== null &&
-                            umkm.employee_count !== undefined
-                                ? String(umkm.employee_count)
-                                : '-'
-                        }
-                    />
-                    <FieldRow
-                        label="Omzet/Bulan"
-                        value={
-                            umkm.monthly_revenue !== null &&
-                            umkm.monthly_revenue !== undefined
-                                ? formatIdr(umkm.monthly_revenue)
-                                : '-'
-                        }
-                    />
-                    <FieldRow
-                        label="Modal"
-                        value={
-                            umkm.capital !== null && umkm.capital !== undefined
-                                ? formatIdr(umkm.capital)
-                                : '-'
-                        }
-                    />
-
-                    <Separator />
-
-                    <FieldRow label="NIB" value={umkm.nib ?? '-'} />
-                    <FieldRow
-                        label="PIRT"
-                        value={
-                            typeof umkm.has_pirt === 'boolean'
-                                ? umkm.has_pirt
-                                    ? 'Ya'
-                                    : 'Tidak'
-                                : '-'
-                        }
-                    />
-                    <FieldRow
-                        label="Sertifikat Halal"
-                        value={
-                            typeof umkm.has_halal_certificate === 'boolean'
-                                ? umkm.has_halal_certificate
-                                    ? 'Ya'
-                                    : 'Tidak'
-                                : '-'
-                        }
-                    />
-
-                    {umkm.status === 'rejected' && umkm.rejection_reason && (
-                        <>
-                            <Separator />
-                            <FieldRow
-                                label="Alasan Ditolak"
-                                value={umkm.rejection_reason}
-                            />
-                        </>
-                    )}
-
-                    {(umkm.latitude || umkm.longitude) && (
-                        <>
-                            <Separator />
-                            <FieldRow
-                                label="Koordinat"
-                                value={
-                                    <code className="text-xs">
-                                        {String(umkm.latitude ?? '-')},{' '}
-                                        {String(umkm.longitude ?? '-')}
-                                    </code>
-                                }
-                            />
-                        </>
-                    )}
+                    {/* Fields dari ID sampai Koordinat disembunyikan untuk tampilan publik */}
                 </div>
 
                 <div className="space-y-2">
@@ -326,22 +210,20 @@ export function UmkmContactCard({ umkm }: UmkmContactCardProps) {
                             <div className="text-sm">
                                 <p className="font-medium">Kontak</p>
 
-                                {ownerPhone ? (
+                                {ownerPhone && (
                                     <a
                                         className="text-primary underline-offset-4 hover:underline"
                                         href={`tel:${ownerPhone}`}
                                     >
                                         {ownerPhone}
                                     </a>
-                                ) : (
-                                    <p className="text-muted-foreground">-</p>
                                 )}
 
-                                {umkm.whatsapp ? (
+                                {umkm.whatsapp && (
                                     <p className="text-muted-foreground">
                                         WhatsApp: {umkm.whatsapp}
                                     </p>
-                                ) : null}
+                                )}
                             </div>
                         </div>
                     )}

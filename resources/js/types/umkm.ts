@@ -70,6 +70,7 @@ export interface FeaturedUmkm {
     category: string;
     description: string | null;
     logo: string | null;
+    first_image: string | null;
     district: string;
     businessType: string;
     hasHalal: boolean;

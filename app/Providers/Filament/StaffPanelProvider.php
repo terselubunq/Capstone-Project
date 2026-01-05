@@ -32,9 +32,11 @@ class StaffPanelProvider extends PanelProvider
             ->id('staff')
             ->path('staff')
             ->login()
+            ->brandName('Dashboard Staff')
             ->colors([
                 'primary' => Color::Green,
             ])
+            ->darkMode(false)
             ->resources([
                 UmkmResource::class,
                 ProductResource::class,

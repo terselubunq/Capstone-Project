@@ -47,6 +47,7 @@ class HomeController extends Controller
                     'district' => $umkm->district,
                     'description' => $umkm->description,
                     'logo' => $umkm->logo,
+                    'first_image' => $umkm->first_image ?? $umkm->logo,
                     'hasHalal' => $umkm->has_halal_certificate,
                     'hasPirt' => $umkm->has_pirt,
                     'businessType' => $umkm->business_type,

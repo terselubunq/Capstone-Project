@@ -31,7 +31,8 @@ class UmkmOwnerPanelProvider extends PanelProvider
         return $panel
             ->id('umkm-owner')
             ->path('umkm-owner')
-            ->login()
+            ->login(\App\Filament\Pages\Auth\UmkmOwnerLogin::class)
+            ->brandName('Dashboard Umkm Owner')
             ->registration(\App\Filament\Pages\Auth\Register::class)
             ->passwordReset()
             ->emailVerification()
@@ -39,6 +40,7 @@ class UmkmOwnerPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Emerald,
             ])
+            ->darkMode(false)
             ->renderHook(
                 'panels::head.end',
                 fn () => Blade::render('
@@ -48,6 +50,11 @@ class UmkmOwnerPanelProvider extends PanelProvider
                             min-height: 100vh !important;
                             position: relative;
                             overflow: hidden;
+                            display: flex !important;
+                            flex-direction: column !important;
+                            justify-content: center !important;
+                            align-items: center !important;
+                            padding: 2rem 0 !important;
                         }
                         .fi-simple-layout::before {
                             content: "";
@@ -102,8 +109,30 @@ class UmkmOwnerPanelProvider extends PanelProvider
                             position: relative;
                             z-index: 10;
                         }
-                        .fi-logo {
+                        .fi-simple-layout .fi-logo {
                             display: none !important;
+                        }
+                        /* Custom logo */
+                        .custom-logo-wrapper {
+                            display: flex;
+                            justify-content: center;
+                            margin-top: 0;
+                            margin-bottom: 1.5rem;
+                            position: relative;
+                            z-index: 10;
+                        }
+                        /* Remove default Filament header spacing */
+                        .fi-simple-header {
+                            padding-top: 0 !important;
+                            margin-top: 0 !important;
+                        }
+                        .custom-logo-wrapper img {
+                            height: 6rem;
+                            width: auto;
+                            transition: transform 0.3s ease;
+                        }
+                        .custom-logo-wrapper img:hover {
+                            transform: scale(1.05);
                         }
                         /* Tombol Sign up dengan warna sama seperti login */
                         .fi-simple-main .fi-btn-primary,
@@ -119,7 +148,58 @@ class UmkmOwnerPanelProvider extends PanelProvider
                         .fi-simple-main button[type="submit"] span {
                             color: #ffffff !important;
                         }
+                        /* Footer styles */
+                        .custom-footer {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 1rem;
+                            margin-top: 2rem;
+                            position: relative;
+                            z-index: 10;
+                        }
+                        .custom-footer-divider {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            font-size: 0.75rem;
+                            color: #6b7280;
+                        }
+                        .custom-footer-line {
+                            height: 1px;
+                            width: 3rem;
+                            background: linear-gradient(to right, transparent, #d1d5db, transparent);
+                        }
+                        .custom-footer-copyright {
+                            text-align: center;
+                            font-size: 0.75rem;
+                            color: #6b7280;
+                        }
                     </style>
+                ')
+            )
+            ->renderHook(
+                'panels::simple-layout.start',
+                fn () => Blade::render('
+                    <div class="custom-logo-wrapper">
+                        <img src="/logo.png" alt="SI UMKM Cirebon" />
+                    </div>
+                ')
+            )
+            ->renderHook(
+                'panels::simple-layout.end',
+                fn () => Blade::render('
+                    <div class="custom-footer">
+                        <div class="custom-footer-divider">
+                            <div class="custom-footer-line"></div>
+                            <span>Platform Resmi</span>
+                            <div class="custom-footer-line"></div>
+                        </div>
+                        <p class="custom-footer-copyright">
+                            © {{ date("Y") }} Dinas Koperasi Kota Cirebon.<br>
+                            Seluruh hak cipta dilindungi.
+                        </p>
+                    </div>
                 ')
             )
             ->resources([

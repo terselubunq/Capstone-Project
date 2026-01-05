@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Facebook, Instagram, Mail, MapPin, Phone, Store } from 'lucide-react';
+import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
 
 export function Footer() {
     return (
@@ -12,17 +12,11 @@ export function Footer() {
                             className="mb-4 flex items-center gap-2"
                             prefetch="hover"
                         >
-                            <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-lg">
-                                <Store className="text-primary-foreground h-6 w-6" />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-lg font-bold leading-tight">
-                                    SI UMKM
-                                </span>
-                                <span className="text-muted-foreground text-xs">
-                                    Cirebon
-                                </span>
-                            </div>
+                            <img
+                                src="/logo.png"
+                                alt="SI UMKM Cirebon"
+                                className="h-10 w-auto"
+                            />
                         </Link>
                         <p className="text-muted-foreground mb-4 text-sm">
                             Platform resmi Dinas Koperasi Cirebon untuk

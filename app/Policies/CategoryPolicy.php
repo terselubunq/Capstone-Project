@@ -30,7 +30,7 @@ class CategoryPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['super-admin', 'admin']) ||
+        return $user->hasAnyRole(['super-admin', 'admin', 'staff']) ||
                $user->hasPermission('category-create');
     }
 
@@ -39,7 +39,7 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category): bool
     {
-        return $user->hasAnyRole(['super-admin', 'admin']) ||
+        return $user->hasAnyRole(['super-admin', 'admin', 'staff']) ||
                $user->hasPermission('category-edit');
     }
 

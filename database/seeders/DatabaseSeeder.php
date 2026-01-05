@@ -14,11 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // --- 1️⃣ Seed dasar (roles, permissions, categories)
+        // --- 1️⃣ Seed dasar (roles, permissions)
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
-            CategorySeeder::class,
+            // CategorySeeder::class, // Comment out - input manual via dashboard
         ]);
 
         // --- 2️⃣ Ambil semua role yang dibutuhkan
@@ -95,20 +95,20 @@ class DatabaseSeeder extends Seeder
             $umkmUser->roles()->attach($umkmOwnerRole);
         }
 
-        // --- 4️⃣ Tambah user dummy otomatis
-        if ($umkmOwnerRole) {
-            User::factory(15)->create()->each(fn($user) => $user->roles()->attach($umkmOwnerRole));
-        }
-        if ($mentorRole) {
-            User::factory(5)->create()->each(fn($user) => $user->roles()->attach($mentorRole));
-        }
+        // --- 4️⃣ Skip dummy users - input manual via dashboard
+        // if ($umkmOwnerRole) {
+        //     User::factory(15)->create()->each(fn($user) => $user->roles()->attach($umkmOwnerRole));
+        // }
+        // if ($mentorRole) {
+        //     User::factory(5)->create()->each(fn($user) => $user->roles()->attach($mentorRole));
+        // }
 
-        // --- 5️⃣ Seed data tambahan
-        $this->call([
-            UmkmSeeder::class,
-            ProductSeeder::class,
-            MentoringSeeder::class,
-            MentoringSessionSeeder::class,
-        ]);
+        // --- 5️⃣ Skip data seeders - input manual via dashboard
+        // $this->call([
+        //     UmkmSeeder::class,
+        //     ProductSeeder::class,
+        //     MentoringSeeder::class,
+        //     MentoringSessionSeeder::class,
+        // ]);
     }
 }

@@ -69,17 +69,11 @@ class UmkmResource extends Resource
 
     public static function getPages(): array
     {
-        $pages = [
+        return [
             'index' => ListUmkms::route('/'),
+            'create' => CreateUmkm::route('/create'),
             'edit' => EditUmkm::route('/{record}/edit'),
         ];
-
-        // UMKM Owners cannot access the create page
-        if (filament()->getCurrentPanel()?->getId() !== 'umkm-owner') {
-            $pages['create'] = CreateUmkm::route('/create');
-        }
-
-        return $pages;
     }
 
     public static function getRecordRouteBindingEloquentQuery(): Builder

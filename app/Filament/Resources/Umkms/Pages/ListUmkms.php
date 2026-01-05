@@ -12,11 +12,6 @@ class ListUmkms extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        // UMKM Owners cannot create new UMKMs (only admins, super-admins, and staff can)
-        if (filament()->getCurrentPanel()?->getId() === 'umkm-owner') {
-            return [];
-        }
-
         return [
             CreateAction::make(),
         ];

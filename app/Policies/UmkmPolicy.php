@@ -40,7 +40,7 @@ class UmkmPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['super-admin', 'admin', 'staff']) ||
+        return $user->hasAnyRole(['super-admin', 'admin', 'staff', 'umkm-owner']) ||
                $user->hasPermission('umkm-create');
     }
 

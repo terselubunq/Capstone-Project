@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Footer } from '@/components/footer';
 import { Navigation } from '@/components/navigation';
 import type { Mentoring } from '@/types/mentoring';
+import { resolveImageUrl } from '@/utils/image';
 import { Head, Link } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
@@ -102,7 +103,7 @@ export default function Show({ mentoring }: ShowProps) {
                                         <div className="flex items-start gap-4">
                                             {mentoring.umkm.logo && (
                                                 <img
-                                                    src={mentoring.umkm.logo}
+                                                    src={resolveImageUrl(mentoring.umkm.logo)}
                                                     alt={mentoring.umkm.business_name}
                                                     className="h-16 w-16 rounded-lg object-cover"
                                                 />
@@ -171,7 +172,7 @@ export default function Show({ mentoring }: ShowProps) {
                                                     </div>
                                                     <div className="flex-1">
                                                         <h4 className="font-medium">
-                                                            {session.topic || `Sesi ${idx + 1}`}
+                                                            {session.title || `Sesi ${idx + 1}`}
                                                         </h4>
                                                         <div className="mt-1 flex flex-wrap gap-4 text-sm text-muted-foreground">
                                                             <span className="flex items-center gap-1">
@@ -271,12 +272,19 @@ export default function Show({ mentoring }: ShowProps) {
                                         <div className="flex items-center justify-between text-sm">
                                             <span className="text-muted-foreground">Total Durasi</span>
                                             <span className="font-medium">
-                                                {Math.ceil(
-                                                    (new Date(mentoring.end_date).getTime() -
-                                                        new Date(mentoring.start_date).getTime()) /
-                                                    (1000 * 60 * 60 * 24 * 7)
-                                                )}{' '}
-                                                Minggu
+                                                {(() => {
+                                                    const diffMs = new Date(mentoring.end_date).getTime() - new Date(mentoring.start_date).getTime();
+                                                    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                                                    if (diffDays < 7) {
+                                                        return `${diffDays} Hari`;
+                                                    } else if (diffDays < 30) {
+                                                        const weeks = Math.round(diffDays / 7);
+                                                        return `${weeks} Minggu`;
+                                                    } else {
+                                                        const months = Math.round(diffDays / 30);
+                                                        return `${months} Bulan`;
+                                                    }
+                                                })()}
                                             </span>
                                         </div>
                                     </div>

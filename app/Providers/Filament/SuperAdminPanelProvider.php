@@ -25,11 +25,12 @@ class SuperAdminPanelProvider extends PanelProvider
         return $panel
             ->id('super-admin')
             ->path('super-admin')
-            ->maxContentWidth('full')
             ->login()
+            ->brandName('Dashboard Super Admin')
             ->colors([
                 'primary' => Color::Teal,
             ])
+            ->darkMode(false)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

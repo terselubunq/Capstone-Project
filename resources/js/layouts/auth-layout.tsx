@@ -1,4 +1,3 @@
-import { Store } from 'lucide-react';
 import { PropsWithChildren } from 'react';
 
 interface AuthLayoutProps extends PropsWithChildren {
@@ -21,33 +20,9 @@ export default function AuthLayout({ title, description, children }: AuthLayoutP
             </div>
 
             <div className="relative z-10 w-full max-w-md">
-                {/* Logo & Header */}
-                <div className="mb-8 text-center">
-                    <div className="mb-6 flex justify-center">
-                        <div className="group relative">
-                            {/* Glow Effect */}
-                            <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-500 opacity-20 blur-xl transition-opacity group-hover:opacity-30" />
-
-                            {/* Logo Container */}
-                            <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 shadow-2xl shadow-emerald-500/25 ring-1 ring-white/20 transition-transform hover:scale-105">
-                                <Store className="h-10 w-10 text-white drop-shadow-md" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Brand Name */}
-                    <div className="mb-4">
-                        <span className="text-sm font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-                            SI UMKM Cirebon
-                        </span>
-                    </div>
-
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        {title}
-                    </h1>
-                    <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-                        {description}
-                    </p>
+                {/* Logo */}
+                <div className="mb-14 flex justify-center">
+                    <img src="/logo.png" alt="SI UMKM Cirebon" className="h-24 w-auto transition-transform hover:scale-105" />
                 </div>
 
                 {/* Form Card with Glassmorphism */}
@@ -57,6 +32,15 @@ export default function AuthLayout({ title, description, children }: AuthLayoutP
 
                     {/* Card */}
                     <div className="relative rounded-2xl border border-white/50 bg-white/80 p-8 shadow-2xl shadow-gray-200/50 backdrop-blur-xl dark:border-gray-800/50 dark:bg-gray-900/80 dark:shadow-none">
+                        {/* Title & Description */}
+                        <div className="mb-6 text-center">
+                            <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                {title}
+                            </h1>
+                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                {description}
+                            </p>
+                        </div>
                         {children}
                     </div>
                 </div>

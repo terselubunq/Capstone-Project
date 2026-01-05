@@ -1,6 +1,5 @@
 'use client';
 
-import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import {
     Avatar,
@@ -36,17 +35,11 @@ export function Navigation() {
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 {/* === LOGO === */}
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-lg">
-                        <Store className="text-primary-foreground h-6 w-6" />
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-lg font-bold leading-tight">
-                            SI UMKM
-                        </span>
-                        <span className="text-muted-foreground text-xs">
-                            Cirebon
-                        </span>
-                    </div>
+                    <img
+                        src="/logo.png"
+                        alt="SI UMKM Cirebon"
+                        className="h-10 w-auto"
+                    />
                 </Link>
 
                 {/* === NAV MENU (Desktop) === */}
@@ -118,9 +111,6 @@ export function Navigation() {
                         </>
                     )}
 
-                    {/* 🌗 Theme Toggle */}
-                    <ThemeToggle />
-
                     {/* === MOBILE MENU === */}
                     <Sheet open={open} onOpenChange={setOpen}>
                         <SheetTrigger asChild>
@@ -139,10 +129,11 @@ export function Navigation() {
                         >
                             <SheetHeader>
                                 <SheetTitle className="flex items-center gap-2">
-                                    <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-                                        <Store className="text-primary-foreground h-5 w-5" />
-                                    </div>
-                                    <span>SI UMKM Cirebon</span>
+                                    <img
+                                        src="/logo.png"
+                                        alt="SI UMKM Cirebon"
+                                        className="h-8 w-auto"
+                                    />
                                 </SheetTitle>
                             </SheetHeader>
 
@@ -230,11 +221,6 @@ export function Navigation() {
                                             </Button>
                                         </>
                                     )}
-                                </div>
-
-                                {/* 🌗 Theme toggle di mobile */}
-                                <div className="mt-6 flex items-center justify-center">
-                                    <ThemeToggle />
                                 </div>
                             </nav>
                         </SheetContent>

@@ -35,7 +35,7 @@ class MentoringPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['super-admin', 'admin', 'staff']) ||
+        return $user->hasAnyRole(['super-admin', 'admin', 'staff', 'mentor']) ||
                $user->hasPermission('mentoring-create');
     }
 

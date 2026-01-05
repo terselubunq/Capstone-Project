@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import type { Umkm } from '@/types/umkm';
+import { resolveImageUrl } from '@/utils/image';
 import { Calendar, CheckCircle2, MapPin, Users } from 'lucide-react';
 
 interface UmkmDetailHeaderProps {
@@ -13,13 +14,15 @@ export function UmkmDetailHeader({ umkm }: UmkmDetailHeaderProps) {
         menengah: 'Usaha Menengah',
     };
 
+    const logoSrc = resolveImageUrl(umkm.logo);
+
     return (
         <section className="border-b bg-muted/30">
             <div className="container mx-auto px-4 py-8">
                 <div className="flex flex-col gap-6 md:flex-row md:items-start">
                     <div className="h-32 w-32 shrink-0 overflow-hidden rounded-xl border bg-card">
                         <img
-                            src={umkm.logo || '/placeholder.svg'}
+                            src={logoSrc}
                             alt={umkm.business_name}
                             className="h-full w-full object-cover"
                         />
@@ -56,12 +59,6 @@ export function UmkmDetailHeader({ umkm }: UmkmDetailHeaderProps) {
                         <h1 className="mb-3 text-3xl font-bold md:text-4xl">
                             {umkm.business_name}
                         </h1>
-
-                        {umkm.description && (
-                            <p className="mb-4 text-lg text-muted-foreground">
-                                {umkm.description}
-                            </p>
-                        )}
 
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1.5">

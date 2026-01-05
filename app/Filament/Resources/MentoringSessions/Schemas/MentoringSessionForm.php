@@ -15,7 +15,10 @@ class MentoringSessionForm
         return $schema
             ->components([
                 Select::make('mentoring_id')
-                    ->relationship('mentoring', 'id')
+                    ->label('Program Mentoring')
+                    ->relationship('mentoring', 'program_name')
+                    ->searchable()
+                    ->preload()
                     ->required(),
                 TextInput::make('title')
                     ->required(),
@@ -34,9 +37,17 @@ class MentoringSessionForm
                 Textarea::make('notes')
                     ->columnSpanFull(),
                 TextInput::make('attachments'),
-                TextInput::make('status')
+                Select::make('status')
+                    ->options([
+                        'scheduled' => 'Scheduled',
+                        'ongoing' => 'Ongoing',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled',
+                        'rescheduled' => 'Rescheduled',
+                    ])
                     ->required()
-                    ->default('scheduled'),
+                    ->default('scheduled')
+                    ->native(false),
                 DateTimePicker::make('started_at'),
                 DateTimePicker::make('completed_at'),
                 Textarea::make('evaluation')
